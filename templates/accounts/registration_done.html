@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block title %}Check your email{% endblock %}
+{% block content %}
+<section class="card result-card"><div class="result-icon" aria-hidden="true">✉</div><span class="eyebrow">ACCOUNT CREATED</span><h1>Check your email</h1><p>Follow the verification link to confirm your email address. The link is valid for 24 hours.</p><p class="muted">After email verification, your hospital or doctor registration still needs approval from a trusted service owner.</p><div class="notice notice-subtle">In this local development version, verification emails appear in the server console.</div><a class="button button-primary" href="{% url 'login' %}">Back to sign in</a></section>
+{% endblock %}

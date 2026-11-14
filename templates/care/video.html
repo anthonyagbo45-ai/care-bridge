@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Video consultation · CareBridge{% endblock %}
+{% block content %}
+<p><a href="{% url 'care:case-detail' case.id %}">← Back to consultation</a></p>
+<p><a href="{% url 'care:case-detail' case.id %}" target="_blank" rel="noopener">Open patient details and reports in another tab</a></p>
+<section class="card form-card">
+  <h1>Video consultation</h1>
+  <p>Use video when the treating clinicians choose it. Follow onsite emergency and referral procedures whenever needed; do not wait for remote care.</p>
+  {% if video_available %}
+    <p>The app does not offer recording. Both participants need a camera or microphone, permission from their browser and a working connection.</p>
+    <div id="video-call"
+         data-start-url="{% url 'care:video-start' case.id %}"
+         data-token-url="{% url 'care:video-token' case.id %}"
+         data-status-url="{% url 'care:video-status' case.id %}"
+         data-end-url="{% url 'care:video-end' case.id %}"
+         data-doctor="{{ is_doctor|yesno:'true,false' }}">
+      <form id="video-csrf">{% csrf_token %}</form>
+      <p id="video-status" role="status" aria-live="polite">{% if active_video %}The doctor has started a session. Join when ready.{% elif is_doctor %}Start a session when both participants are ready.{% else %}Waiting for the doctor to start a session.{% endif %}</p>
+      <div class="media-grid">
+        <section class="video-panel"><h2>You</h2><div id="local-media" aria-label="Your camera"></div></section>
+        <section class="video-panel"><h2>Other participant</h2><div id="remote-media" aria-label="Other participant video"></div></section>
+      </div>
+      <div class="video-actions">
+        {% if is_doctor %}<button class="button button-primary" type="button" id="start-video">Start and join video</button>{% endif %}
+        <button class="button button-secondary" type="button" id="join-video">Join video</button>
+        <button class="button button-secondary" type="button" id="toggle-microphone" disabled>Mute microphone</button>
+        <button class="button button-secondary" type="button" id="toggle-camera" disabled>Turn camera off</button>
+        <button class="button button-secondary" type="button" id="end-video">End session for both participants</button>
+      </div>
+      <p>You can finish the written consultation after ending the video session. Connection problems do not prevent a written response.</p>
+    </div>
+  {% else %}
+    <p role="status"><strong>Video is not configured.</strong> Written consultation remains available. A deployment owner must configure a private LiveKit service and confirm its explicit room policy before video can be used.</p>
+  {% endif %}
+</section>
+{% endblock %}
+{% block extra_js %}
+{% if video_available %}
+<script src="{% static 'vendor/livekit/livekit-client.umd.js' %}" defer></script>
+<script src="{% static 'js/video.js' %}" defer></script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,12 @@
+.env
+.venv/
+venv/
+db.sqlite3*
+private-reports/
+staticfiles/
+__pycache__/
+*.py[cod]
+.ruff_cache/
+.pytest_cache/
+artifacts/
+*.log
