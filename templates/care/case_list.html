@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Your cases{% endblock %}
 {% block content %}
+{% url 'care:inbox-updates' as updates_url %}{% url 'care:case-list' as refresh_url %}{% include 'care/_updates.html' %}
 <div class="page-heading heading-with-action"><div><span class="eyebrow">{% if user.role == 'STAFF' %}{{ user.hospital.name }}{% else %}YOUR CONSULTATION INBOX{% endif %}</span><h1>Your cases</h1><p>{% if user.role == 'STAFF' %}A clear handover. A considered response. All in one place.{% else %}Review cases from the hospitals you work with.{% endif %}</p></div>{% if user.role == 'STAFF' %}<a class="button button-primary" href="{% url 'care:case-create' %}"><span aria-hidden="true">+</span> New case</a>{% endif %}</div>
 <div class="emergency-note"><span aria-hidden="true">!</span><p>Urgent or emergency care must follow your onsite procedures. Do not wait for a remote consultation.</p></div>
 <section class="card case-inbox" aria-labelledby="inbox-heading"><div class="card-heading"><h2 id="inbox-heading">Consultation inbox</h2><span class="muted small">{% if page_obj.paginator.count == 1 %}1 case{% else %}{{ page_obj.paginator.count|default:'0' }} cases{% endif %}</span></div>
@@ -9,3 +11,4 @@
 {% if page_obj.has_other_pages %}<nav class="pagination" aria-label="Case pages">{% if page_obj.has_previous %}<a class="button button-secondary button-small" href="?page={{ page_obj.previous_page_number }}">← Previous</a>{% endif %}<span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>{% if page_obj.has_next %}<a class="button button-secondary button-small" href="?page={{ page_obj.next_page_number }}">Next →</a>{% endif %}</nav>{% endif %}
 <p class="page-footnote">{% if user.role == 'STAFF' %}Need to connect a locum doctor? <a href="{% url 'accounts:links' %}">Manage your doctors</a>{% else %}Only cases assigned to you through an active hospital connection appear here.{% endif %}</p>
 {% endblock %}
+{% block extra_js %}<script src="{% static 'js/updates.js' %}" defer></script>{% endblock %}

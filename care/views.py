@@ -5,7 +5,7 @@ from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.paginator import Paginator
 from django.db import DatabaseError
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.utils.cache import patch_vary_headers
 from django.views.decorators.debug import sensitive_post_parameters
@@ -25,6 +25,7 @@ from .services import (
     finalize_response,
     perform_action,
 )
+from .updates import case_revision, inbox_revision
 
 
 def private_view(view):
@@ -35,7 +36,11 @@ def private_view(view):
     def wrapped(request, *args, **kwargs):
         try:
             if not request.user.is_authenticated:
-                response = redirect_to_login(request.path)
+                response = (
+                    HttpResponse("Sign in again to continue.", status=401)
+                    if request.headers.get("Accept") == "application/json"
+                    else redirect_to_login(request.path)
+                )
             else:
                 response = view(request, *args, **kwargs)
         except PermissionDenied:
@@ -76,6 +81,9 @@ def case_list(request):
     if not eligible(request.user):
         return redirect("accounts:links")
     with authorized_list(request.user.pk) as (user, cases):
+        # Take the marker first: a concurrent change may cause a harmless
+        # refresh prompt, but must never be absorbed by a marker newer than UI.
+        revision = inbox_revision(user.pk, cases)
         page = Paginator(cases, 20).get_page(request.GET.get("page"))
         page.object_list = list(page.object_list)
         return render(
@@ -86,8 +94,23 @@ def case_list(request):
                 "page_obj": page,
                 "is_staff_user": user.role == User.Role.STAFF,
                 "is_doctor": user.role == User.Role.DOCTOR,
+                "updates_revision": revision,
             },
         )
+
+
+@private_view
+@require_GET
+def inbox_updates(request):
+    with authorized_list(request.user.pk) as (user, cases):
+        return JsonResponse({"revision": inbox_revision(user.pk, cases)})
+
+
+@private_view
+@require_GET
+def case_updates(request, case_id):
+    with authorized_case(request.user.pk, case_id) as (user, case, _link):
+        return JsonResponse({"revision": case_revision(user.pk, case)})
 
 
 @private_view
@@ -112,6 +135,7 @@ def _render_detail(request, case_id, *, response_form=None, status=200):
     from .media import configured
 
     with authorized_case(request.user.pk, case_id) as (user, case, _link):
+        revision = case_revision(user.pk, case)
         doctor = user.role == User.Role.DOCTOR
         staff = user.role == User.Role.STAFF
         in_review = case.status == Case.Status.IN_REVIEW
@@ -139,6 +163,7 @@ def _render_detail(request, case_id, *, response_form=None, status=200):
             "upload_form": ReportUploadForm(),
             "video_available": configured(),
             "active_video": active_video,
+            "updates_revision": revision,
         }
         CaseEvent.objects.create(case=case, actor=user, event=CaseEvent.Event.READ)
         return render(request, "care/case_detail.html", context, status=status)

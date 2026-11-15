@@ -1,4 +1,4 @@
-"""Independent CareBridge configuration; local development uses SQLite."""
+"""Independent Care Bridge configuration; local development uses SQLite."""
 
 import os
 from pathlib import Path
@@ -113,7 +113,7 @@ EMAIL_BACKEND = os.environ.get(
     if DEBUG
     else "django.core.mail.backends.smtp.EmailBackend",
 )
-DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "CareBridge <no-reply@localhost>")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "Care Bridge <no-reply@localhost>")
 EMAIL_HOST = os.environ.get("EMAIL_HOST", "")
 EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")

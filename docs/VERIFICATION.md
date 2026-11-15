@@ -1,4 +1,4 @@
-# CareBridge verification — 14 November 2026
+# Care Bridge verification — 15 November 2026
 
 This is an independent development MVP for fictional demonstrations, built in
 the `care-bridge` repository. It does not import MEDBRIDGE application modules.
@@ -6,16 +6,16 @@ The earlier MEDBRIDGE checkout remained clean at `dbd6d06`.
 
 ## Observed checks
 
-- Installed `requirements-dev.txt` in CareBridge's own fresh `.venv`, without
+- Installed `requirements-dev.txt` in Care Bridge's own fresh `.venv`, without
   system package installation or Docker. Dependency consistency passed.
-- All **76 tests passed in 2.056 seconds**, with no skips, using
+- All **92 tests passed in 2.715 seconds**, with no skips, using
   `DJANGO_SETTINGS_MODULE=config.test_settings`. This forces memory SQLite,
   generated test keys, a temporary private report directory and local email.
   It never opens the configured application database.
 - Django system checks, migration consistency, Ruff lint and formatting passed.
 - A redacted Gitleaks scan of staged source files passed. Private configuration,
   virtual environments, databases and report directories are excluded from Git.
-- The final headless Chromium proof passed **39 masked screenshots at
+- The final headless Chromium proof passed **57 masked screenshots at
   1440, 390 and 320 pixels**, without horizontal overflow. It uses actual
   password/CSRF forms: hospital creates a case, uploads a quarantined PNG,
   doctor accepts, validation rejects a wrong confirmation password, doctor
@@ -55,6 +55,33 @@ report. The owner entry now uses the authentication attempt limit too.
 The initial browser attempt exposed `Referrer-Policy: no-referrer` producing a
 null form origin. It was corrected to `same-origin`; CSRF checking remains enabled
 and a null origin is explicitly rejected in regression tests.
+
+## Open-page updates and naming
+
+The visible application name is **Care Bridge**, including the owner console,
+email confirmation and browser titles. Existing demo addresses, environment
+variables and repository identifiers remain compatible.
+
+Sixteen new regression tests cover opaque, private inbox/case revisions, current
+scope checks, read-only polling, report and video state changes, activation of
+GET-only endpoints, anonymous JSON checks and safe refresh URLs after validation
+errors. Read-audit events and retry timestamps do not create false updates.
+Ordered report/call metadata detects changes without sending clinical content.
+Two concurrent-display regressions ensure a change arriving while a page is
+being rendered cannot be silently absorbed into the page's baseline marker.
+
+The browser proof additionally verifies new-case, acceptance and final-response
+alerts; report-upload alerts while a doctor types; dismissing refresh preserves
+the draft; and confirmation still appears for prefilled responses after a failed
+password check. It exercises the real 15-second JavaScript timer with Playwright's
+clock. Controlled HTTP 503 responses verify retry delays of 30 then 60 seconds
+and recovery. Simulated visibility events verify hidden-page pauses. A real
+permission revocation returns 403 and stops further checks. The phone alert
+layout was visually inspected. No page is replaced automatically.
+
+No dependency or database migration is required for this update. These checks
+establish open-page alerts only; no background push, actual antivirus outcome,
+live media connection or guaranteed doctor response is claimed.
 
 ## Remaining deployment checks
 

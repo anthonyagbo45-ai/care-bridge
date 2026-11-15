@@ -6,8 +6,10 @@ app_name = "care"
 
 urlpatterns = [
     path("", views.case_list, name="case-list"),
+    path("updates/", views.inbox_updates, name="inbox-updates"),
     path("new/", views.case_create, name="case-create"),
     path("<uuid:case_id>/", views.case_detail, name="case-detail"),
+    path("<uuid:case_id>/updates/", views.case_updates, name="case-updates"),
     path("<uuid:case_id>/actions/<slug:action>/", views.case_action, name="case-action"),
     path("<uuid:case_id>/respond/", views.case_respond, name="case-respond"),
     path("<uuid:case_id>/reports/", media_views.upload, name="document-upload"),

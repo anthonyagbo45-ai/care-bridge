@@ -39,7 +39,7 @@ def _send_activation(request, user):
     )
     try:
         send_mail(
-            "Confirm your CareBridge email address",
+            "Confirm your Care Bridge email address",
             "Confirm this email address to continue registration:\n\n"
             f"{url}\n\nThis link expires in 24 hours. Open the page and confirm the request. "
             "Hospital and doctor approval are separate owner checks. "

@@ -1,4 +1,4 @@
-name: CareBridge checks
+name: Care Bridge checks
 on: [push, pull_request]
 permissions:
   contents: read

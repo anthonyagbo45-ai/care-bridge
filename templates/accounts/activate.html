@@ -3,7 +3,7 @@
 {% block content %}
 <section class="card result-card">
   {% if activated %}<div class="result-icon" aria-hidden="true">✓</div><span class="eyebrow">EMAIL VERIFIED</span><h1>Your email is confirmed</h1><p>You can now sign in to check your approval status.</p><p class="muted">Patient cases become available once your hospital or doctor registration is approved.</p><a class="button button-primary" href="{% url 'login' %}">Continue to sign in</a>
-  {% elif activation_valid %}<div class="result-icon" aria-hidden="true">✉</div><span class="eyebrow">ONE MORE STEP</span><h1>Confirm your email</h1><p>Choose the button below to verify your email address for CareBridge.</p><form method="post">{% csrf_token %}<button class="button button-primary" type="submit">Confirm email address</button></form>
+  {% elif activation_valid %}<div class="result-icon" aria-hidden="true">✉</div><span class="eyebrow">ONE MORE STEP</span><h1>Confirm your email</h1><p>Choose the button below to verify your email address for Care Bridge.</p><form method="post">{% csrf_token %}<button class="button button-primary" type="submit">Confirm email address</button></form>
   {% else %}<div class="result-icon" aria-hidden="true">!</div><h1>This link is no longer valid</h1><p>{{ message|default:'The verification link may have expired or the account details may have changed.' }}</p><a class="button button-primary" href="{% url 'login' %}">Back to sign in</a>{% endif %}
 </section>
 {% endblock %}

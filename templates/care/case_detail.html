@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Consultation case{% endblock %}
 {% block content %}
-<a class="button button-quiet button-small" href="{% url 'care:case-detail' case.id %}">Check for updates</a>
+{% url 'care:case-updates' case.id as updates_url %}{% url 'care:case-detail' case.id as refresh_url %}{% include 'care/_updates.html' %}
 <a class="back-link" href="{% url 'care:case-list' %}"><span aria-hidden="true">←</span> All cases</a>
 <div class="page-heading heading-with-action"><div><span class="eyebrow">CONSULTATION CASE</span><h1>{{ case.patient_name }}</h1><p>{{ case.age_years }} years old{% if case.patient_reference %}<span class="meta-divider">·</span>Reference {{ case.patient_reference }}{% endif %}</p></div><span class="status status-{{ case.status|lower }} status-large">{{ case.get_status_display }}</span></div>
 <div class="emergency-note"><span aria-hidden="true">!</span><p>Urgent or emergency care must follow your onsite procedures. Do not wait for a remote consultation.</p></div>
@@ -34,3 +35,4 @@
   </aside>
 </div>
 {% endblock %}
+{% block extra_js %}<script src="{% static 'js/updates.js' %}" defer></script>{% endblock %}

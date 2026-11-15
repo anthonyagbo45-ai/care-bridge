@@ -4,7 +4,7 @@
 {% block content %}
 <div class="auth-intro"><span class="eyebrow">HOSPITALS &amp; THEIR LOCUM DOCTORS</span><h1>Good care starts<br>with a clear handover.</h1><p>Share a case. Get a considered response.<br>Keep your team on the same page.</p><div class="intro-note"><span class="small-mark" aria-hidden="true">+</span><span>One case, one doctor,<br>one clear next step.</span></div></div>
 <section class="card auth-card" aria-labelledby="login-heading">
-  <span class="eyebrow">WELCOME BACK</span><h2 id="login-heading">Sign in to CareBridge</h2><p class="muted">Use your own hospital or doctor account.</p>
+  <span class="eyebrow">WELCOME BACK</span><h2 id="login-heading">Sign in to Care Bridge</h2><p class="muted">Use your own hospital or doctor account.</p>
   <form method="post" class="stack-form">{% csrf_token %}
     {% if form.non_field_errors %}<div class="notice notice-error" role="alert">{{ form.non_field_errors }}</div>{% endif %}
     {% for field in form %}<div class="field">{{ field.label_tag }}{{ field }}{% if field.errors %}<div class="field-errors">{{ field.errors }}</div>{% endif %}{% if field.help_text %}<div class="help-text">{{ field.help_text|safe }}</div>{% endif %}</div>{% endfor %}

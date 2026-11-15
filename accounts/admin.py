@@ -4,6 +4,10 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .forms import AdminUserChangeForm, AdminUserCreationForm
 from .models import Hospital, User
 
+admin.site.site_header = "Care Bridge owner"
+admin.site.site_title = "Care Bridge"
+admin.site.index_title = "Hospital and doctor approvals"
+
 
 class OwnerOnlyAdmin:
     """Approval administration belongs only to the trusted application owner."""

@@ -1,4 +1,4 @@
-# CareBridge
+# Care Bridge
 
 A separate, focused Django app for a hospital team and its already hired locum
 doctors. Each case is a standalone handover, with patient details, vitals and
@@ -59,13 +59,30 @@ directory together. Losing `REPORT_ROOT_KEY` loses access to stored report bytes
 5. Review the details and available reports. Write the assessment,
    recommendations and follow-up/escalation advice. Confirm the final response
    with the doctor's password.
-6. The hospital uses **Check for updates**, reads the reply and confirms it
-   has been seen. The response is retained and cannot be overwritten.
+6. The hospital sees **New updates are available**, chooses **Show updates**,
+   reads the reply and confirms it has been seen. The response is retained and
+   cannot be overwritten.
 
 The app does not promise that a doctor is online or will respond within a
 particular time. The hospital remains responsible for monitoring pending cases
-and using its agreed cover/escalation arrangements. Updates currently require
-the **Check for updates** link or a reload; closed-browser alerts are not provided.
+and using its agreed cover/escalation arrangements.
+
+## Updates without losing your place
+
+The case inbox and consultation page check for changes about every 15 seconds
+while visible. A small **New updates are available** message offers **Show
+updates** when a case, reply, report scan result or call state changes. The page
+never refreshes itself, so an unfinished written response stays where it is.
+If you choose to refresh after typing, a confirmation warns that the unfinished
+entries will be lost. Refresh always opens the case safely with a GET request,
+including after an unsuccessful response submission.
+
+Checks pause when the tab is hidden, retry more slowly after a connection
+failure, and stop if your access is withdrawn. The check returns an opaque change
+marker after checking current permissions; it sends no patient details or
+consultation text. **Refresh** also works when JavaScript is unavailable.
+These are open-page alerts, not phone notifications or closed-browser alerts.
+They do not establish that a doctor has seen a case or guarantee a response time.
 
 ## Real accounts and owner setup
 
